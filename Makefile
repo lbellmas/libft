@@ -11,10 +11,12 @@ LIB = libft.h
 ifndef BONUS
 	OBJ = $(SRC:.c=.o)
 else
-	OBJ = $(SRC:.c=.o) $(SRC_BONUS:.c=.o)
+	OBJ = $(SRC:.c=.o) $(OBJB)
 endif
 
 OBJB = $(SRC_BONUS:.c=.o)
+DEP = $(SRC:.c=.d)
+DEPB = $(SRC_BONUS:.c=.d)
 
 all: $(NAME)
 
@@ -22,10 +24,10 @@ $(NAME): $(OBJ)
 	$(AR) $(NAME) $(OBJ)
 
 %.o: %.c $(LIB) Makefile
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(OBJB)
+	rm -f $(OBJ) $(OBJB) $(DEP) $(DEPB)
 
 fclean: clean
 	rm -f $(NAME)
@@ -35,5 +37,7 @@ re: fclean all
 bonus:
 	@make BONUS=1 --no-print-directory
 
+-include {DEP}
+-include {DEPB}
 .PHONY: all clean fclean re bonus
 
